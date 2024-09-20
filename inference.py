@@ -13,10 +13,10 @@ from torchvision.ops import nms
 
 
 cfg = Config.fromfile(
-        "configs/pretrain/yolo_world_v2_l_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_1280ft_lvis_minival.py"
+        "configs/finetune_coco/custom_finetunev2.py"
     )
 cfg.work_dir = "."
-cfg.load_from = "pretrained_weights/yolo_world_v2_l_obj365v1_goldg_pretrain_1280ft-9babe3f6.pth"
+cfg.load_from = "work_dirs/custom_finetunev2/epoch_80.pth"
 runner = Runner.from_cfg(cfg)
 runner = Runner.from_cfg(cfg)
 runner.call_hook("before_run")
@@ -54,8 +54,8 @@ mask_annotator = sv.MaskAnnotator()
 #                "clock, vase, scissors, teddy bear, hair drier, toothbrush")
 
 # class_names2 = ("dog, eye, tongue, ear, leash")
-class_names = ("car, pedestrian, bus, truck, tank, armored car")
-class_inplace = ["compact car", "pedestrian", "bus", "lorry", "tank", "armored car"]
+class_names = ("bus, civilian, sedan, construction machinery, military tank, military truck, truck, minivan")
+class_inplace = ["bus", "civilian", "sedan", "construction machinery", "military tank", "military truck", "truck", "minivan"]
 
 def run_image(
         runner,
@@ -131,8 +131,8 @@ def run_image(
     return svimage[:, :, ::-1]
 
 if __name__ == '__main__':
-    input_path = '../images240520'
-    output_path = '../predict_1500'
+    input_path = 'data/coco/val2017'
+    output_path = './inference_vis'
     image = [os.path.join(input_path, i) for i in os.listdir(input_path)]
     for item in image:
         run_image(runner, item, output_path)
